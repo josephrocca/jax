@@ -15,7 +15,6 @@
 from functools import partial
 from typing import Callable, Iterable, Optional, Tuple, Union
 from warnings import warn
-from absl import logging
 import numpy as np
 
 from jax import core
@@ -26,6 +25,7 @@ from jax.interpreters import mlir
 from jax.interpreters import pxla
 from jax.interpreters import xla
 from jax import linear_util as lu
+from jax import logging
 from jax._src import dispatch
 from jax._src.lib import xla_bridge as xb
 from jax._src.lib import xla_client as xc
@@ -80,11 +80,11 @@ def _sharded_callable(
                           for arg, parts, lparts
                           in safe_zip(abstract_args, in_parts, local_in_parts)]
 
-  if logging.vlog_is_on(2):
-    logging.vlog(2, "abstract_args: %s", abstract_args)
-    logging.vlog(2, "global_abstract_args: %s", global_abstract_args)
-    logging.vlog(2, "in_parts: %s", in_parts)
-    logging.vlog(2, "local_in_parts: %s", local_in_parts)
+  if logging.vlog_is_on(logging.CPP_ERROR):
+    logging.vlog(logging.CPP_ERROR, "abstract_args: %s", abstract_args)
+    logging.vlog(logging.CPP_ERROR, "global_abstract_args: %s", global_abstract_args)
+    logging.vlog(logging.CPP_ERROR, "in_parts: %s", in_parts)
+    logging.vlog(logging.CPP_ERROR, "local_in_parts: %s", local_in_parts)
 
   jaxpr, global_out_avals, consts = pe.trace_to_jaxpr_final(fun, global_abstract_args)
 
@@ -114,8 +114,8 @@ def _sharded_callable(
         f"sharded_jit computation requires {local_nparts} local devices, "
         f"but only {xb.local_device_count()} local devices are available.")
 
-  if logging.vlog_is_on(2):
-    logging.vlog(2, "nparts: %d  local_nparts: %d", nparts, local_nparts)
+  if logging.vlog_is_on(logging.CPP_ERROR):
+    logging.vlog(logging.CPP_ERROR, "nparts: %d  local_nparts: %d", nparts, local_nparts)
 
   out_parts = out_parts_thunk()
 
@@ -123,9 +123,9 @@ def _sharded_callable(
   if local_out_parts is None:
     local_out_parts = out_parts
 
-  if logging.vlog_is_on(2):
-    logging.vlog(2, "out_parts: %s", out_parts)
-    logging.vlog(2, "local_out_parts: %s", local_out_parts)
+  if logging.vlog_is_on(logging.CPP_ERROR):
+    logging.vlog(logging.CPP_ERROR, "out_parts: %s", out_parts)
+    logging.vlog(logging.CPP_ERROR, "local_out_parts: %s", local_out_parts)
 
   local_out_avals = [pxla.get_local_aval(out, parts, lparts)
                      for out, parts, lparts

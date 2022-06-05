@@ -18,13 +18,12 @@
 import contextlib
 import functools
 import itertools
+import logging
 import os
 import sys
 import threading
 from typing import Any, List, Callable, NamedTuple, Iterator, Optional
 import warnings
-
-from absl import logging
 
 from jax._src import lib
 from jax._src.lib import jax_jit
@@ -516,6 +515,14 @@ def update_thread_local_jit_state(**kw):
   tls.extra_jit_context = context._replace(**kw)
 
 
+def _reload_logging_module(val):
+  # Update hook for the jax_use_absl_logging flag.
+  # Reloads JAX's logging module using importlib.
+  from importlib import reload, import_module
+  jax_logging = import_module("jax.logging")
+  jax_logging = reload(jax_logging)
+
+
 # TODO(mattjj): remove all uses of this flag
 flags.DEFINE_bool(
     'jax_omnistaging',
@@ -534,6 +541,13 @@ flags.DEFINE_bool(
     'jax_pprint_use_color',
     bool_env('JAX_PPRINT_USE_COLOR', True),
     help='Enable jaxpr pretty-printing with colorful syntax highlighting.'
+)
+
+flags.DEFINE_bool(
+    'jax_use_absl_logging',
+    bool_env('JAX_USE_ABSL_LOGGING', False),
+    help='Use absl logging in JAX instead of Python builtin logging.',
+    update_hook=_reload_logging_module,
 )
 
 flags.DEFINE_bool(

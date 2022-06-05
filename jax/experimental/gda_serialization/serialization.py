@@ -18,9 +18,9 @@ import re
 import threading
 import time
 from typing import Callable
-from absl import logging
 
 import jax
+from jax import logging
 from jax._src import distributed
 from jax._src.util import prod
 from jax.experimental import global_device_array as gda

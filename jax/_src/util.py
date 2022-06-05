@@ -24,9 +24,9 @@ from typing import (Any, Callable, Dict, Iterable, List, Tuple, Generic,
                     TypeVar, Set, Iterator, Sequence)
 import weakref
 
-from absl import logging
 import numpy as np
 
+from jax import logging
 from jax.config import config
 
 Seq = Sequence

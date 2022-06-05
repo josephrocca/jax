@@ -32,7 +32,7 @@ import re
 
 from absl import app
 from absl import flags
-from absl import logging
+from jax import logging
 from jax.experimental.jax2tf.converters_eval import converters
 
 import datetime
