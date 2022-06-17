@@ -39,7 +39,7 @@ setup(
     package_data={'jax': ['py.typed']},
     python_requires='>=3.7',
     install_requires=[
-        'absl-py',
+        # 'absl-py', # this isn't needed since it's only used for logging and the new logger abstracts it and just uses normal print statements by default
         'numpy>=1.19',
         'opt_einsum',
         'scipy>=1.2.1',
