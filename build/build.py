@@ -513,6 +513,10 @@ def main():
     config_args += ["--config=rocm"]
     if not args.enable_nccl:
       config_args += ["--config=nonccl"]
+  
+  # This is so Bazel inherits all the Pyodide built environment variables:
+  for e in ["--action_env="+k for k in dict.keys(dict(os.environ))]:
+    config_args += [e]
 
   command = ([bazel_path] + args.bazel_startup_options +
     ["run", "--verbose_failures=true"] + config_args +
