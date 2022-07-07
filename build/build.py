@@ -513,6 +513,10 @@ def main():
     config_args += ["--config=rocm"]
     if not args.enable_nccl:
       config_args += ["--config=nonccl"]
+  
+  # This is needed to ensure Bazel inherits the Emscripten/Pyodide env variables: https://github.com/bazelbuild/bazel/issues/4635#issuecomment-365549476
+  for e in ["--action_env="+k for k in dict.keys(dict(os.environ))]:
+    config_args += [e]
 
   command = ([bazel_path] + args.bazel_startup_options +
     ["run", "--verbose_failures=true"] + config_args +
